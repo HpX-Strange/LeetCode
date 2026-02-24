@@ -1,9 +1,9 @@
 class DisjointSet {
 public:
-    vector<int> parent, rank;
+    vector<int> parent, size;
     DisjointSet(int n) {
         parent.resize(n);
-        rank.resize(n, 0);
+        size.resize(n, 1);
         iota(parent.begin(), parent.end(), 0);
     }
     int find(int node) {
@@ -12,10 +12,16 @@ public:
     }
     void unite(int u, int v) {
         int pu = find(u), pv = find(v);
-        if (pu != pv) {
-            if (rank[pu] < rank[pv]) parent[pu] = pv;
-            else if (rank[pu] > rank[pv]) parent[pv] = pu;
-            else { parent[pv] = pu; rank[pu]++; }
+        if(pu==pv){
+            return;
+        }
+        if(size[pu]>size[pv]){
+            parent[pv]= pu;
+            size[pu]= size[pu]+size[pv];
+        }
+        else{
+            parent[pu]=pv;
+            size[pv]=size[pv]+size[pu];
         }
     }
 };
