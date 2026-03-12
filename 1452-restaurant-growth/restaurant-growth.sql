@@ -1,10 +1,11 @@
 # Write your MySQL query statement below
-select distinct visited_on,
-        sum(amount) over w as amount,
-        round((sum(amount) over w)/7, 2) as average_amount
-    from customer
-    WINDOW w AS ( 
-            order by visited_on
-            range between interval 6 day PRECEDING and current row
-    )
-    Limit 6, 999
+SELECT visited_on, amount, ROUND(average_amount,2) as average_amount
+FROM (
+    SELECT visited_on,
+    SUM(SUM(amount)) OVER(ORDER BY visited_on ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) as amount,
+    AVG(SUM(amount)) OVER(ORDER BY visited_on ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) as average_amount,
+    ROW_NUMBER() OVER(ORDER BY visited_on) as RN
+    FROM Customer
+    GROUP BY visited_on
+) as C
+WHERE RN>=7;
