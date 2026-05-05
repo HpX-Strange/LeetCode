@@ -10,19 +10,13 @@
  */
 class Solution {
 public:
-
-    ListNode* solve(ListNode* head){
+    ListNode* reverseList(ListNode* head) {
         if(head==NULL || head->next==NULL){
             return head;
         }
-        ListNode* temp= head->next;
-        head->next=NULL;
-        ListNode* head2= solve(temp);
-        temp->next=head;
-        return head2;
-    }
-
-    ListNode* reverseList(ListNode* head) {
-        return solve(head);
+        ListNode* temp= reverseList(head->next);
+        head->next->next=head;
+        head->next= NULL;
+        return temp;
     }
 };
